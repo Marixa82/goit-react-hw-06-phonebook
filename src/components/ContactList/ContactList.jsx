@@ -17,7 +17,8 @@ export const ContactList = ({ contacts, delContact }) => {
          </Ul>)
     }
     
-ContactList.propTypes = {
+
+    ContactList.propTypes = {
     contacts: PropTypes.array.isRequired,
     delContact: PropTypes.func.isRequired,
  }
