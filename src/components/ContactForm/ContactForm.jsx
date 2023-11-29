@@ -1,17 +1,28 @@
 import { Button, Input, Label, Form} from "./ContactForm.styled";
 import {  useState } from "react";
 import { nanoid } from 'nanoid'
-import PropTypes from 'prop-types';
+import {useSelector,  useDispatch } from 'react-redux';
+import { addContact } from "redux/createSlice";
+import { getContacts } from "redux/selectors";
 
 
-
-export default function ContactForm (props) {
+  const ContactForm = () => {
   const [name, setName] = useState('');
   const [number, setNumber] = useState('');
+  const dispatch = useDispatch();
+  const contacts = useSelector(getContacts);
   
- 
+  const resetForm = () => {
+    setName('');
+    setNumber('');
+} 
+  const handelCheckUniqueContact = (name) => {
+    const isNameContact = !!contacts.find((contact) => contact.name === name)
+    isNameContact && alert(`${name} is already in contacts`) 
+    return !isNameContact;
+  };
   const handleChangeForm = event => {
-        const {name, value} = event.target
+  const {name, value} = event.target
   switch (name) {
     case 'name':
       setName(value);
@@ -26,29 +37,26 @@ export default function ContactForm (props) {
   const id = nanoid();
   
   const handelSubmit = (e) => {
-  e.preventDefault();
-  const { onAdd } = props;
-   const isValidatedForm = validateForm();
-
-  if (isValidatedForm) {
-    onAdd({ id, name, number });
-    resetForm();
-  }
+    e.preventDefault();
+    
+     const isValidatedForm = validateForm();
+    if (isValidatedForm) {
+      dispatch(addContact({ id, name, number }))
+      resetForm();
+    }
+    else {
+      resetForm();
+    }
 };
 
-  const resetForm = () => {
-    setName('');
-    setNumber('');
-} 
-
+ 
 const validateForm = () => {
-  const { onCheckUnique } = props;
   if (!name || !number) {
     alert('Some field is empty');
     return false;
   }
-  return onCheckUnique(name);
-};
+  return handelCheckUniqueContact(name);
+  };
 
   return (
     <Form onSubmit={handelSubmit}>
@@ -75,16 +83,12 @@ const validateForm = () => {
           title="Phone number must be digits and can contain spaces, dashes, parentheses and can start with +"
           required
         /></Label>
-      <Button type='submit'>Add contact</Button>
+      <Button type='submit' >Add contact</Button>
     </Form>
   );
 
 }
-
-ContactForm.propTypes = {
-  onAdd: PropTypes.func.isRequired,
-  onCheckUnique: PropTypes.func.isRequired,
-};
+export default ContactForm;
 
 
 
