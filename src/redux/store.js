@@ -15,6 +15,7 @@ import { reducer } from './reducers';
 const persistConfig = {
     key: 'root',
     storage,
+    blacklist: ['filter'],
 }
 const persistedReducer = persistReducer(persistConfig, reducer);
 

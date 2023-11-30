@@ -17,7 +17,7 @@ import { getContacts } from "redux/selectors";
     setNumber('');
 } 
   const handelCheckUniqueContact = (name) => {
-    const isNameContact = !!contacts.find((contact) => contact.name === name)
+    const isNameContact = !!contacts.find((contact) => contact.name.toLowerCase() === name.toLowerCase());
     isNameContact && alert(`${name} is already in contacts`) 
     return !isNameContact;
   };
